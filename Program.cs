@@ -1,146 +1,141 @@
-﻿
-
-
-namespace gestorDespesas
+﻿namespace expenseManager
 {
     class Program
     {
-        static List<Despesa> despesas = new List<Despesa>();
+        static List<Expense> expenses = new List<Expense>();
 
         static void Main(string[] args)
         {
-            //criar ficheiro
-            string file = "despesas.txt";
+            string file = "expenses.txt";
             if (!File.Exists(file))
             {
-                Console.WriteLine("Task file not found.");
-                Console.WriteLine("Creating a new task file...");
+                Console.WriteLine("Expense file not found.");
+                Console.WriteLine("Creating a new expense file...");
                 File.Create(file).Close();
             }
 
             bool running = true;
-
-            CarregarDespesas();
+            LoadExpenses();
 
             while (running)
             {
-                Console.WriteLine("-----GESTÃO DE DESPESAS PESSOAIS-----");
-
-                Console.WriteLine("1 - Adicionar despesa");
-                Console.WriteLine("2 - Listar despesas");
-                Console.WriteLine("3 - Ver total gasto");
-                Console.WriteLine("4 - Ver despesas por categoria");
-                Console.WriteLine("5 - Sair");
+                Console.WriteLine("-----PERSONAL EXPENSE MANAGER-----");
+                Console.WriteLine("1 - Add expense");
+                Console.WriteLine("2 - List expenses");
+                Console.WriteLine("3 - View total spent");
+                Console.WriteLine("4 - View expenses by category");
+                Console.WriteLine("5 - Exit");
 
                 int option = Convert.ToInt32(Console.ReadLine());
 
                 switch (option)
                 {
                     case 1:
-                        AdicionarDespesa();
+                        AddExpense();
                         break;
                     case 2:
-                        ListarDespesas();
+                        ListExpenses();
                         break;
                     case 3:
-                        VerTotalGasto();
+                        ViewTotalSpent();
                         break;
                     case 4:
-                        VerDespesasPorCategoria();
+                        ViewExpensesByCategory();
                         break;
                     case 5:
                         running = false;
                         break;
                     default:
-                        Console.WriteLine("Opção inválida. Tente novamente.");
+                        Console.WriteLine("Invalid option. Please try again.");
                         break;
                 }
             }
         }
 
-        static void AdicionarDespesa()
+        static void AddExpense()
         {
-            Console.WriteLine("Digite o nome da despesa:");
+            Console.WriteLine("Enter expense name:");
             string name = Console.ReadLine() ?? "";
-            Console.WriteLine("Digite o valor da despesa:");
+            Console.WriteLine("Enter expense value:");
             double value = Convert.ToDouble(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
-            Console.WriteLine("Digite a descrição da despesa:");
+            Console.WriteLine("Enter expense description:");
             string description = Console.ReadLine() ?? "";
-            Console.WriteLine("Digite a data da despesa:");
+            Console.WriteLine("Enter expense date:");
             string date = Console.ReadLine() ?? "";
-            Console.WriteLine("Digite a categoria da despesa:");
+            Console.WriteLine("Enter expense category:");
             string category = Console.ReadLine() ?? "";
 
-            Despesa despesa = new Despesa()
+            Expense expense = new Expense()
             {
-                name = name ?? "",
+                name = name,
                 value = value,
-                description = description ?? "",
-                date = date ?? "",
-                category = category ?? ""
+                description = description,
+                date = date,
+                category = category
             };
 
-            despesas.Add(despesa);
-            SalvarDespesas();
+            expenses.Add(expense);
+            SaveExpenses();
         }
 
-        static void ListarDespesas()
+        static void ListExpenses()
         {
-            Console.WriteLine("-----LISTA DE DESPESAS-----");
-            foreach (var despesa in despesas)
+            Console.WriteLine("-----EXPENSE LIST-----");
+            foreach (var expense in expenses)
             {
-                Console.WriteLine($"Nome: {despesa.name}");
-                Console.WriteLine($"Valor: {despesa.value}");
-                Console.WriteLine($"Descrição: {despesa.description}");
-                Console.WriteLine($"Data: {despesa.date}");
-                Console.WriteLine($"Categoria: {despesa.category}");
+                Console.WriteLine($"Name: {expense.name}");
+                Console.WriteLine($"Value: {expense.value}");
+                Console.WriteLine($"Description: {expense.description}");
+                Console.WriteLine($"Date: {expense.date}");
+                Console.WriteLine($"Category: {expense.category}");
                 Console.WriteLine("-----------------------------------");
             }
         }
 
-        static void VerTotalGasto()
+        static void ViewTotalSpent()
         {
             double total = 0;
-            foreach (var despesa in despesas)
+            foreach (var expense in expenses)
             {
-                total += despesa.value;
+                total += expense.value;
             }
-            Console.WriteLine($"Total gasto: {total}");
+            Console.WriteLine($"Total spent: {total}");
         }
 
-        static void VerDespesasPorCategoria()
+        static void ViewExpensesByCategory()
         {
-            Console.WriteLine("Digite a categoria para filtrar:");
+            Console.WriteLine("Enter category to filter:");
             string category = Console.ReadLine() ?? "";
-            Console.WriteLine($"-----DESPESAS NA CATEGORIA: {category}-----");
-            foreach (var despesa in despesas)
+            Console.WriteLine($"-----EXPENSES IN CATEGORY: {category}-----");
+            foreach (var expense in expenses)
             {
-                if (despesa.category.Equals(category, StringComparison.OrdinalIgnoreCase))
+                if (expense.category.Equals(category, StringComparison.OrdinalIgnoreCase))
                 {
-                    Console.WriteLine($"Nome: {despesa.name}");
-                    Console.WriteLine($"Valor: {despesa.value}");
-                    Console.WriteLine($"Descrição: {despesa.description}");
-                    Console.WriteLine($"Data: {despesa.date}");
-                    Console.WriteLine($"Categoria: {despesa.category}");
+                    Console.WriteLine($"Name: {expense.name}");
+                    Console.WriteLine($"Value: {expense.value}");
+                    Console.WriteLine($"Description: {expense.description}");
+                    Console.WriteLine($"Date: {expense.date}");
+                    Console.WriteLine($"Category: {expense.category}");
                     Console.WriteLine("-----------------------------------");
                 }
             }
         }
 
-        static void SalvarDespesas()
+        static void SaveExpenses()
         {
-            string file = "despesas.txt";
+            string file = "expenses.txt";
             using (StreamWriter writer = new StreamWriter(file))
             {
-                foreach (var despesa in despesas)
+                foreach (var expense in expenses)
                 {
-                    writer.WriteLine($"{despesa.name}|{despesa.value}|{despesa.description}|{despesa.date}|{despesa.category}");
+                    writer.WriteLine($"{expense.name}|{expense.value}|{expense.description}|{expense.date}|{expense.category}");
                 }
             }
         }
-        static void CarregarDespesas()
+
+        static void LoadExpenses()
         {
-            string file = "despesas.txt";
+            string file = "expenses.txt";
             if (File.Exists(file))
             {
                 string[] lines = File.ReadAllLines(file);
@@ -149,7 +144,7 @@ namespace gestorDespesas
                     string[] parts = line.Split('|');
                     if (parts.Length == 5)
                     {
-                        Despesa despesa = new Despesa()
+                        Expense expense = new Expense()
                         {
                             name = parts[0],
                             value = Convert.ToDouble(parts[1], System.Globalization.CultureInfo.InvariantCulture),
@@ -157,7 +152,7 @@ namespace gestorDespesas
                             date = parts[3],
                             category = parts[4]
                         };
-                        despesas.Add(despesa);
+                        expenses.Add(expense);
                     }
                 }
             }
@@ -165,12 +160,11 @@ namespace gestorDespesas
     }
 }
 
-
-class Despesa{
+class Expense
+{
     public string name = "";
     public double value = 0;
     public string description = "";
     public string date = "";
     public string category = "";
-
 }
