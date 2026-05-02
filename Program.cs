@@ -1,4 +1,6 @@
 ﻿
+using System.Security.Cryptography.X509Certificates;
+
 namespace expenseManager
 {
     class Program
@@ -133,6 +135,8 @@ namespace expenseManager
             }
         }
 
+static string currency = "$";
+
         static void ViewTotalSpent()
         {
             double total = 0;
@@ -141,7 +145,7 @@ namespace expenseManager
                 total += expense.value;
             }
             Console.Clear();
-            PrintWithPadding($"Total spent: {total}");
+            PrintWithPadding($"Total spent: {currency}{total}", 2);
         }
 
         static void ViewExpensesByCategory()
@@ -229,7 +233,7 @@ namespace expenseManager
                 case 2:
                     Console.Clear();
                     PrintWithPadding("Enter new currency symbol:");
-                    string currency = Console.ReadLine() ?? "$";
+                    currency = Console.ReadLine() ?? "$";
                     PrintWithPadding("Currency changed.");
                     Thread.Sleep(1000);
                     Console.Clear();
