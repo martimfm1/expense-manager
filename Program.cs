@@ -1,4 +1,5 @@
-﻿namespace expenseManager
+﻿
+namespace expenseManager
 {
     class Program
     {
@@ -22,7 +23,7 @@
 
             while (running)
             {
-                Console.ForegroundColor = ConsoleColor.Cyan;
+                
                 Console.Clear();
                 PrintWithPadding("-----PERSONAL EXPENSE MANAGER-----", 2);
                 PrintWithPadding("1 - Add expense",1);
@@ -32,7 +33,7 @@
                 PrintWithPadding("5 - Settings",1);
                 PrintWithPadding("6 - Exit",1);
 
-                int option = Convert.ToInt32(Console.ReadLine());
+                int option = int.TryParse(Console.ReadLine(), out int result) ? result : 0;
 
                 switch (option)
                 {
@@ -203,15 +204,18 @@
             }
         }
 
+        static ConsoleColor currentColor = ConsoleColor.Gray;
+
         static void SettingsMenu()
         {
             Console.Clear();
             PrintWithPadding("-----SETTINGS-----", 2);
             PrintWithPadding("1 - Clear all expenses",1);
             PrintWithPadding("2 - Change currency",1);
-            PrintWithPadding("3 - Back to main menu",1);
+            PrintWithPadding("3 - Change terminal color",1);
+            PrintWithPadding("4 - Back to main menu",1);
 
-            int option = Convert.ToInt32(Console.ReadLine());
+            int option = int.TryParse(Console.ReadLine(), out int result) ? result : 0;
 
             switch (option)
             {
@@ -232,13 +236,30 @@
                     break;
                 case 3:
                     Console.Clear();
-                    PrintWithPadding("Returning to main menu.");
+                    PrintWithPadding("Available colors: Black, DarkBlue, DarkGreen, DarkCyan, DarkRed, DarkMagenta, DarkYellow, Gray, DarkGray, Blue, Green, Cyan, Red, Magenta, Yellow, White");
+                    PrintWithPadding("Enter new terminal color:");
+                    string colorInput = Console.ReadLine() ?? "White";
+                    if (Enum.TryParse(colorInput, true, out ConsoleColor color))
+                    {
+                        currentColor = color;
+                        PrintWithPadding("Terminal color changed.");
+                    }
+                    else
+                    {
+                        PrintWithPadding("Invalid color. Using default.");
+                    }
+                    Thread.Sleep(1500);
+                    Console.Clear();
+                    break;
+                case 4:
+                    Console.Clear();
+                    PrintWithPadding("Returning to main menu...");
                     Thread.Sleep(1000);
                     Console.Clear();
                     break;
                 default:
                     PrintWithPadding("Invalid option. Returning to main menu.");
-                    Thread.Sleep(1000);
+                    Thread.Sleep(1500);
                     Console.Clear();
                     break;
             }
@@ -246,7 +267,9 @@
         static void PrintWithPadding(string text, int paddingBottom = 0)
         {
             int spaces = Math.Max(0, (Console.WindowWidth - text.Length) / 2);
+            Console.ForegroundColor = currentColor;
             Console.WriteLine(new string(' ', spaces) + text);
+            Console.ResetColor();
             for (int i = 0; i < paddingBottom; i++)
             {
                 Console.WriteLine();
