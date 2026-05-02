@@ -1,2 +1,0 @@
-pneus|192,32|pneus para o carro|12/05/2026|carro
-pintura|1823,93|pintura do carro|09/12/2020|carro

@@ -9,9 +9,12 @@
             string file = "expenses.txt";
             if (!File.Exists(file))
             {
+                Console.Clear();
                 Console.WriteLine("Expense file not found.");
                 Console.WriteLine("Creating a new expense file...");
                 File.Create(file).Close();
+                Thread.Sleep(1500);
+                Console.Clear();
             }
 
             bool running = true;
@@ -19,12 +22,15 @@
 
             while (running)
             {
-                Console.WriteLine("-----PERSONAL EXPENSE MANAGER-----");
-                Console.WriteLine("1 - Add expense");
-                Console.WriteLine("2 - List expenses");
-                Console.WriteLine("3 - View total spent");
-                Console.WriteLine("4 - View expenses by category");
-                Console.WriteLine("5 - Exit");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Clear();
+                PrintWithPadding("-----PERSONAL EXPENSE MANAGER-----", 2);
+                PrintWithPadding("1 - Add expense",1);
+                PrintWithPadding("2 - List expenses",1);
+                PrintWithPadding("3 - View total spent",1);
+                PrintWithPadding("4 - View expenses by category",1);
+                PrintWithPadding("5 - Settings",1);
+                PrintWithPadding("6 - Exit",1);
 
                 int option = Convert.ToInt32(Console.ReadLine());
 
@@ -32,21 +38,48 @@
                 {
                     case 1:
                         AddExpense();
+                        PrintWithPadding("Expense added successfully!");
+                        Thread.Sleep(1500);
+                        PrintWithPadding("Press any key to continue...");
+                        Console.ReadKey();
+                        Console.Clear();
                         break;
                     case 2:
                         ListExpenses();
+                        PrintWithPadding("Press any key to continue...");
+                        Console.ReadKey();
+                        Console.Clear();
                         break;
                     case 3:
                         ViewTotalSpent();
+                        PrintWithPadding("Press any key to continue...");
+                        Console.ReadKey();
+                        Console.Clear();
                         break;
                     case 4:
                         ViewExpensesByCategory();
+                        PrintWithPadding("Press any key to continue...");
+                        Console.ReadKey();
+                        Console.Clear();
                         break;
                     case 5:
+                        Console.Clear();
+                        SettingsMenu();
+                        PrintWithPadding("Press any key to continue...");
+                        Console.ReadKey();
+                        Console.Clear();
+                        break;
+                    case 6:
                         running = false;
+                        PrintWithPadding("Press any key to continue...");
+                        Console.ReadKey();
+                        Console.Clear();
                         break;
                     default:
-                        Console.WriteLine("Invalid option. Please try again.");
+                        PrintWithPadding("Invalid option. Please try again.");
+                        PrintWithPadding("Press any key to continue...");
+                        Console.ReadKey();
+                        Console.Clear();
                         break;
                 }
             }
@@ -54,16 +87,22 @@
 
         static void AddExpense()
         {
-            Console.WriteLine("Enter expense name:");
+            Console.Clear();
+            PrintWithPadding("Enter expense name:");
             string name = Console.ReadLine() ?? "";
-            Console.WriteLine("Enter expense value:");
+            Console.Clear();
+            PrintWithPadding("Enter expense value:");
             double value = Convert.ToDouble(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
-            Console.WriteLine("Enter expense description:");
+            Console.Clear();
+            PrintWithPadding("Enter expense description:");
             string description = Console.ReadLine() ?? "";
-            Console.WriteLine("Enter expense date:");
+            Console.Clear();
+            PrintWithPadding("Enter expense date:");
             string date = Console.ReadLine() ?? "";
-            Console.WriteLine("Enter expense category:");
+            Console.Clear();
+            PrintWithPadding("Enter expense category:");
             string category = Console.ReadLine() ?? "";
+            Console.Clear();
 
             Expense expense = new Expense()
             {
@@ -80,15 +119,16 @@
 
         static void ListExpenses()
         {
-            Console.WriteLine("-----EXPENSE LIST-----");
+            Console.Clear();
+            PrintWithPadding("-----EXPENSE LIST-----" , 2);
             foreach (var expense in expenses)
             {
-                Console.WriteLine($"Name: {expense.name}");
-                Console.WriteLine($"Value: {expense.value}");
-                Console.WriteLine($"Description: {expense.description}");
-                Console.WriteLine($"Date: {expense.date}");
-                Console.WriteLine($"Category: {expense.category}");
-                Console.WriteLine("-----------------------------------");
+                PrintWithPadding($"Name: {expense.name}");
+                PrintWithPadding($"Value: {expense.value}");
+                PrintWithPadding($"Description: {expense.description}");
+                PrintWithPadding($"Date: {expense.date}");
+                PrintWithPadding($"Category: {expense.category}");
+                PrintWithPadding("-----------------------------------", 1);
             }
         }
 
@@ -99,24 +139,29 @@
             {
                 total += expense.value;
             }
-            Console.WriteLine($"Total spent: {total}");
+            Console.Clear();
+            PrintWithPadding($"Total spent: {total}");
         }
 
         static void ViewExpensesByCategory()
         {
-            Console.WriteLine("Enter category to filter:");
+            Console.Clear();
+            PrintWithPadding("----- CATEGORIES -----", 2);
+            PrintWithPadding($"Categories: {string.Join(", ", expenses.Select(e => e.category).Distinct())}", 1);
+            PrintWithPadding("Enter category to filter:");
             string category = Console.ReadLine() ?? "";
-            Console.WriteLine($"-----EXPENSES IN CATEGORY: {category}-----");
+            Console.Clear();
+            PrintWithPadding($"----- EXPENSES IN CATEGORY: {category} -----", 2);
             foreach (var expense in expenses)
             {
                 if (expense.category.Equals(category, StringComparison.OrdinalIgnoreCase))
                 {
-                    Console.WriteLine($"Name: {expense.name}");
-                    Console.WriteLine($"Value: {expense.value}");
-                    Console.WriteLine($"Description: {expense.description}");
-                    Console.WriteLine($"Date: {expense.date}");
-                    Console.WriteLine($"Category: {expense.category}");
-                    Console.WriteLine("-----------------------------------");
+                    PrintWithPadding($"Name: {expense.name}");
+                    PrintWithPadding($"Value: {expense.value}");
+                    PrintWithPadding($"Description: {expense.description}");
+                    PrintWithPadding($"Date: {expense.date}");
+                    PrintWithPadding($"Category: {expense.category}");
+                    PrintWithPadding("-----------------------------------", 1);
                 }
             }
         }
@@ -155,6 +200,56 @@
                         expenses.Add(expense);
                     }
                 }
+            }
+        }
+
+        static void SettingsMenu()
+        {
+            Console.Clear();
+            PrintWithPadding("-----SETTINGS-----", 2);
+            PrintWithPadding("1 - Clear all expenses",1);
+            PrintWithPadding("2 - Change currency",1);
+            PrintWithPadding("3 - Back to main menu",1);
+
+            int option = Convert.ToInt32(Console.ReadLine());
+
+            switch (option)
+            {
+                case 1:
+                    expenses.Clear();
+                    SaveExpenses();
+                    Console.Clear();
+                    PrintWithPadding("All expenses cleared.");
+                    Thread.Sleep(1000);
+                    break;
+                case 2:
+                    Console.Clear();
+                    PrintWithPadding("Enter new currency symbol:");
+                    string currency = Console.ReadLine() ?? "$";
+                    PrintWithPadding("Currency changed.");
+                    Thread.Sleep(1000);
+                    Console.Clear();
+                    break;
+                case 3:
+                    Console.Clear();
+                    PrintWithPadding("Returning to main menu.");
+                    Thread.Sleep(1000);
+                    Console.Clear();
+                    break;
+                default:
+                    PrintWithPadding("Invalid option. Returning to main menu.");
+                    Thread.Sleep(1000);
+                    Console.Clear();
+                    break;
+            }
+        }
+        static void PrintWithPadding(string text, int paddingBottom = 0)
+        {
+            int spaces = Math.Max(0, (Console.WindowWidth - text.Length) / 2);
+            Console.WriteLine(new string(' ', spaces) + text);
+            for (int i = 0; i < paddingBottom; i++)
+            {
+                Console.WriteLine();
             }
         }
     }
