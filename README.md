@@ -9,11 +9,11 @@ A terminal-based personal expense manager built in C# as a learning project.
 When you start the program, a menu appears with 5 options:
 ```
 -----GESTÃO DE DESPESAS PESSOAIS-----
-1 - Adicionar despesa
-2 - Listar despesas
-3 - Ver total gasto
-4 - Ver despesas por categoria
-5 - Sair
+1 - Add expense
+2 - List expenses
+3 - View total spent
+4 - View by category
+5 - Exit
 ```
 **1 - Add expense** — enter the name, value, description, date and category of the expense.
 
